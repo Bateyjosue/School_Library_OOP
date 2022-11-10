@@ -1,12 +1,15 @@
 # School_Library_OOP
+
 > In this project, I build a school library app. In this initial step, I implement the classes to represent students and teachers. Build with Ruby
 
 # ScreenShot
+
 ![Coming Soon]()
 
 ## Getting Started
 
 This repository includes Ruby Scripts
+
 # Setup
 
 ### Clone the repository:
@@ -20,7 +23,6 @@ This repository includes Ruby Scripts
 ### Run the project
 
     $ ruby main.rb
-
 
 ## Authors
 
@@ -48,4 +50,4 @@ Give a ⭐️ if you like this project!
 
 ## 📝 License
 
-This project is [MIT](./MIT.md) licensed.
+This project is [MIT](./LICENSE) licensed.
