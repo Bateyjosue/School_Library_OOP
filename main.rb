@@ -110,6 +110,7 @@ def list_rental()
   person_id = gets.chomp.to_i
   @persons.each do |p|
     next unless p.id == person_id
+
     puts 'Rentals: '
     p.rentals.each do |rental|
       puts "Date: #{rental.date}, Book: #{rental.book.title} by #{rental.book.author}"
