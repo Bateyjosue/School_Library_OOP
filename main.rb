@@ -3,8 +3,8 @@ require_relative './teacher'
 require_relative './book'
 require_relative './rental'
 
-persons = []
-books = []
+@persons = []
+@books = []
 rentals = []
 
 def message
@@ -51,8 +51,8 @@ def create_student()
   print('Has parent permission? [Y/N]: ')
   parent_permission = gets.chomp
   person = Student.new(name, age, parent_permission.upcase)
-  # persons.push(['Student', person.name, person.id, person.age])
-  persons.push(person)
+  # @persons.push(['Student', person.name, person.id, person.age])
+  @persons.push(person)
   puts "Student created successfully\n"
 end
 
@@ -66,7 +66,7 @@ def create_teacher()
   specialization = gets.chomp
   teacher = Teacher.new(name, age, specialization)
   # persons.push(['Teacher', teacher.name, teacher.id, teacher.age])
-  persons.push(teacher)
+  @persons.push(teacher)
   puts "Teacher created successfully\n"
 end
 
@@ -78,21 +78,21 @@ def add_book
   author = gets.chomp
   book = Book.new(title, author)
   # books.push([book.title, book.author])
-  books.push(book)
+  @books.push(book)
   puts "Book created successfully\n"
 end
 
 def create_rental(rentals)
   puts 'Select a book from the following list by number '
-  puts "\t\t+    No Book found, please Add a book  +" if books.size.zero?
-  books.each_with_index do |book, index|
+  puts "\t\t+    No Book found, please Add a book  +" if @books.size.zero?
+  @books.each_with_index do |book, index|
     puts "#{index}) Title: \"#{book.title}\", Author: #{book.author}"
   end
   book_index = gets.chomp.to_i
 
   puts 'Select a person from the following list by number (not id)'
-  puts "\t\t+    No Person found, please Add a book  +" if persons.size.zero?
-  persons.each_with_index do |person, index|
+  puts "\t\t+    No Person found, please Add a book  +" if @persons.size.zero?
+  @persons.each_with_index do |person, index|
     puts "#{index}) [#{person.class}] Name: #{person.name}, ID: #{person.id}, Age: #{person.age}"
   end
   person_index = gets.chomp.to_i
@@ -100,7 +100,7 @@ def create_rental(rentals)
   puts 'Date [YYYY-MM-DD] :'
   date = gets.chomp
 
-  rentals.push(Rental.new(date, persons[person_index], books[book_index]))
+  rentals.push(Rental.new(date, @persons[person_index], @books[book_index]))
 
   puts "Rental created successfully\n"
 end
@@ -108,9 +108,8 @@ end
 def list_rental()
   puts 'ID of Person: '
   person_id = gets.chomp.to_i
-  persons.each do |p|
+  @persons.each do |p|
     next unless p.id == person_id
-
     puts 'Rentals: '
     p.rentals.each do |rental|
       puts "Date: #{rental.date}, Book: #{rental.book.title} by #{rental.book.author}"
@@ -140,9 +139,9 @@ loop do
   @rep = gets.chomp
   case @rep.to_i
   when 1
-    list_books(books)
+    list_books(@books)
   when 2
-    list_person(persons)
+    list_person(@persons)
   when 3
     create_person
   when 4
