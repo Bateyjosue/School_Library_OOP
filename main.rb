@@ -5,7 +5,7 @@ require_relative './rental'
 
 @persons = []
 @books = []
-rentals = []
+@rentals = []
 
 def message
   p '======  Welcome to Our School Library Apps  ======'
@@ -82,7 +82,7 @@ def add_book
   puts "Book created successfully\n"
 end
 
-def create_rental(rentals)
+def create_rental
   puts 'Select a book from the following list by number '
   puts "\t\t+    No Book found, please Add a book  +" if @books.size.zero?
   @books.each_with_index do |book, index|
@@ -99,23 +99,21 @@ def create_rental(rentals)
 
   puts 'Date [YYYY-MM-DD] :'
   date = gets.chomp
-
-  rentals.push(Rental.new(date, @persons[person_index], @books[book_index]))
+  rental = Rental.new(date, @books[book_index], @persons[person_index])
+  @rentals.push(rental)
 
   puts "Rental created successfully\n"
 end
 
-def list_rental()
-  puts 'ID of Person: '
-  person_id = gets.chomp.to_i
-  @persons.each do |p|
-    next unless p.id == person_id
-
-    puts 'Rentals: '
-    p.rentals.each do |rental|
-      puts "Date: #{rental.date}, Book: #{rental.book.title} by #{rental.book.author}"
-    end
+def list_rental
+  print 'ID of person: '
+  @persons.each_with_index do |person, index|
+    puts "#{index}) [#{person.class}] Name: #{person.name}, ID: #{person.id}, Age: #{person.age}"
   end
+  id = gets.chomp.to_i
+  person = @persons.find { |p| p.id == id }
+  puts 'Rentals: '
+  person.rentals.each { |rental| puts "Date: #{rental.date}, Book: #{rental.book.title} by #{rental.book.author}" }
 end
 
 def create_person()
@@ -148,9 +146,10 @@ loop do
   when 4
     add_book
   when 5
-    create_rental(rentals)
+    create_rental
   when 6
     list_rental
+    # puts @rentals
   else
     puts 'Thanks for using This App!!!'
   end
