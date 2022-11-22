@@ -20,7 +20,7 @@ class App
       puts "Title: \"#{book.title}\", Author: #{book.author}"
     end
   end
-  
+
   def list_person(persons)
     if persons.size.zero?
       puts "\t\t++++++++++++++++++++++++++++++++++++++++"
@@ -31,7 +31,7 @@ class App
       puts "[#{person.class}] Name: #{person.name}, ID: #{person.id}, Age: #{person.age}"
     end
   end
-  
+
   def create_student()
     puts '+++++++++ Add Student +++++++++'
     print('Age: ')
@@ -44,7 +44,7 @@ class App
     @persons.push(person)
     puts "Student created successfully\n"
   end
-  
+
   def create_teacher()
     puts '+++++++++ Add Teacher +++++++++'
     print('Age: ')
@@ -57,7 +57,7 @@ class App
     @persons.push(teacher)
     puts "Teacher created successfully\n"
   end
-  
+
   def add_book
     puts '+++++++++ Add Book +++++++++'
     print('Title: ')
@@ -68,7 +68,7 @@ class App
     @books.push(book)
     puts "Book created successfully\n"
   end
-  
+
   def create_rental
     puts 'Select a book from the following list by number '
     puts "\t\t+    No Book found, please Add a book  +" if @books.size.zero?
@@ -76,22 +76,22 @@ class App
       puts "#{index}) Title: \"#{book.title}\", Author: #{book.author}"
     end
     book_index = gets.chomp.to_i
-  
+
     puts 'Select a person from the following list by number (not id)'
     puts "\t\t+    No Person found, please Add a book  +" if @persons.size.zero?
     @persons.each_with_index do |person, index|
       puts "#{index}) [#{person.class}] Name: #{person.name}, ID: #{person.id}, Age: #{person.age}"
     end
     person_index = gets.chomp.to_i
-  
+
     puts 'Date [YYYY-MM-DD] :'
     date = gets.chomp
     rental = Rental.new(date, @books[book_index], @persons[person_index])
     @rentals.push(rental)
-  
+
     puts "Rental created successfully\n"
   end
-  
+
   def list_rental
     print 'ID of person: '
     @persons.each_with_index do |person, index|
@@ -102,7 +102,7 @@ class App
     puts 'Rentals: '
     person.rentals.each { |rental| puts "Date: #{rental.date}, Book: #{rental.book.title} by #{rental.book.author}" }
   end
-  
+
   def create_person()
     loop do
       print 'Do you want to create a student (1) or a teacher (2)? [Input the number] :'
@@ -132,6 +132,7 @@ class App
     puts '7 - Exit'
   end
 
+  # rubocop:disable Metrics/CyclomaticComplexity, Metrics/MethodLength
   def run()
     @rep = 0
     loop do
@@ -152,9 +153,9 @@ class App
         list_rental
       else
         puts 'Thanks for using This App!!!'
-        
       end
       break unless @rep.to_i != 7
     end
   end
 end
+# rubocop:enable Metrics/CyclomaticComplexity, Metrics/MethodLength
