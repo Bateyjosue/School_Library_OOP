@@ -134,30 +134,4 @@ class App
     puts '7 - Exit'
   end
 
-  # rubocop:disable Metrics/CyclomaticComplexity, Metrics/MethodLength
-  def run()
-    @rep = 0
-    loop do
-      message
-      @rep = gets.chomp
-      case @rep.to_i
-      when 1
-        list_books(@books)
-      when 2
-        list_person(@persons)
-      when 3
-        create_person
-      when 4
-        add_book
-      when 5
-        create_rental
-      when 6
-        list_rental
-      else
-        puts 'Thanks for using This App!!!'
-      end
-      break unless @rep.to_i != 7
-    end
-  end
 end
-# rubocop:enable Metrics/CyclomaticComplexity, Metrics/MethodLength
