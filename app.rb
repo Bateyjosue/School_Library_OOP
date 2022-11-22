@@ -4,30 +4,31 @@ require_relative './book'
 require_relative './rental'
 
 class App
+  attr_accessor :persons, :books, :rentals
   def initialize()
     @persons = []
     @books = []
     @rentals = []
   end
 
-  def list_books(books)
-    if books.size.zero?
+  def list_books
+    if @books.size.zero?
       puts "\t\t++++++++++++++++++++++++++++++++++++++++"
       puts "\t\t+    No Book found, please Add a book  +"
       puts "\t\t++++++++++++++++++++++++++++++++++++++++\n"
     end
-    books.each do |book|
+    @books.each do |book|
       puts "Title: \"#{book.title}\", Author: #{book.author}"
     end
   end
 
-  def list_person(persons)
-    if persons.size.zero?
+  def list_person
+    if @persons.size.zero?
       puts "\t\t++++++++++++++++++++++++++++++++++++++++"
       puts "\t\t+    No Person found, please Add a book  +"
       puts "\t\t++++++++++++++++++++++++++++++++++++++++\n"
     end
-    persons.each do |person|
+    @persons.each do |person|
       puts "[#{person.class}] Name: #{person.name}, ID: #{person.id}, Age: #{person.age}"
     end
   end
