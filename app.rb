@@ -40,9 +40,9 @@ class App
     age = gets.chomp
     print('Name: ')
     name = gets.chomp
-    print('Has parent permission? [Y/N]: ')
-    parent_permission = gets.chomp
-    person = Student.new(name, age, parent_permission.upcase)
+    # print('Has parent permission? [Y/N]: ')
+    # parent_permission = gets.chomp
+    person = Student.new(name, age)
     @persons.push(person)
     puts "Student created successfully\n"
   end
@@ -134,4 +134,12 @@ class App
     puts '7 - Exit'
   end
 
+  
+  def make_file(filename, ob)
+    if File.exists?("#{filename}.json")
+      File.open("#{filename}.json", 'a') { |file| file.write( ob)}
+    else
+      File.open("#{filename}.json", 'w') { |file| file.write( ob)}
+    end
+  end
 end
