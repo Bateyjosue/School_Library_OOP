@@ -10,9 +10,9 @@ class App
 
   def initialize()
     
-    @persons = JSON.parse(File.read('persons.json'))
-    @books = JSON.parse(File.read('books.json'))
-    @rentals = JSON.parse(File.read('rentals.json'))
+    @persons = [JSON.parse(File.read('persons.json'))]
+    @books = [JSON.parse(File.read('books.json'))]
+    @rentals = [JSON.parse(File.read('rentals.json'))]
     binding.pry
   end
 
@@ -23,7 +23,7 @@ class App
       puts "\t\t++++++++++++++++++++++++++++++++++++++++\n"
     end
     @books.each do |book|
-      puts "Title: \"#{book.title}\", Author: #{book.author}"
+      puts "Title: \"#{book['title']}, Author: #{book['author']}"
     end
   end
 
@@ -34,7 +34,7 @@ class App
       puts "\t\t++++++++++++++++++++++++++++++++++++++++\n"
     end
     @persons.each do |person|
-      puts "[#{person.class}] Name: #{person.name}, ID: #{person.id}, Age: #{person.age}"
+      puts "[#{person.class}] Name: #{person['name']}, ID: #{person['id']}, Age: #{person['age']}"
     end
   end
 
@@ -78,15 +78,15 @@ class App
   def create_rental
     puts 'Select a book from the following list by number '
     puts "\t\t+    No Book found, please Add a book  +" if @books.size.zero?
-    @books.each_with_index do |book, index|
-      puts "#{index}) Title: \"#{book.title}\", Author: #{book.author}"
+    @books.each_with_index.map do |book, index|
+      puts "#{index}) Title: \"#{book['title']}\", Author: #{book['author']}"
     end
     book_index = gets.chomp.to_i
 
     puts 'Select a person from the following list by number (not id)'
     puts "\t\t+    No Person found, please Add a book  +" if @persons.size.zero?
-    @persons.each_with_index do |person, index|
-      puts "#{index}) [#{person.class}] Name: #{person.name}, ID: #{person.id}, Age: #{person.age}"
+    @persons.each_with_index.map do |person, index|
+      puts "#{index}) [#{person['class']}] Name: #{person['name']}, ID: #{person['id']}, Age: #{person['age']}"
     end
     person_index = gets.chomp.to_i
 
@@ -101,12 +101,12 @@ class App
   def list_rental
     print 'ID of person: '
     @persons.each_with_index do |person, index|
-      puts "#{index}) [#{person.class}] Name: #{person.name}, ID: #{person.id}, Age: #{person.age}"
+      puts "#{index}) [#{person.class}] Name: #{person['name']}, ID: #{person['id']}, Age: #{person['age']}"
     end
     id = gets.chomp.to_i
     person = @persons.find { |p| p.id == id }
     puts 'Rentals: '
-    person.rentals.each { |rental| puts "Date: #{rental.date}, Book: #{rental.book.title} by #{rental.book.author}" }
+    person.rentals.map { |rental| puts "Date: #{rental['date']}, Book: #{rental['book_title']} by #{rental['book_author']}" }
   end
 
   def create_person()
