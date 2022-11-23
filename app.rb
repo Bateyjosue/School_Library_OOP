@@ -3,13 +3,17 @@ require_relative './teacher'
 require_relative './book'
 require_relative './rental'
 
+require 'json'
+
 class App
   attr_accessor :persons, :books, :rentals
 
   def initialize()
-    @persons = []
-    @books = []
-    @rentals = []
+    
+    @persons = JSON.parse(File.read('persons.json'))
+    @books = JSON.parse(File.read('books.json'))
+    @rentals = JSON.parse(File.read('rentals.json'))
+    binding.pry
   end
 
   def list_books
