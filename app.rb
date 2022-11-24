@@ -9,7 +9,6 @@ class App
   attr_accessor :persons, :books, :rentals
 
   def initialize()
-    
     @persons = [JSON.parse(File.read('persons.json'))]
     @books = [JSON.parse(File.read('books.json'))]
     @rentals = [JSON.parse(File.read('rentals.json'))]
@@ -106,7 +105,9 @@ class App
     id = gets.chomp.to_i
     person = @persons.find { |p| p.id == id }
     puts 'Rentals: '
-    person.rentals.map { |rental| puts "Date: #{rental['date']}, Book: #{rental['book_title']} by #{rental['book_author']}" }
+    person.rentals.map do |rental|
+      puts "Date: #{rental['date']}, Book: #{rental['book_title']} by #{rental['book_author']}"
+    end
   end
 
   def create_person()
@@ -138,12 +139,11 @@ class App
     puts '7 - Exit'
   end
 
-  
   def make_file(filename, ob)
-    if File.exists?("#{filename}.json")
-      File.open("#{filename}.json", 'a') { |file| file.write( ob)}
+    if File.exist?("#{filename}.json")
+      File.open("#{filename}.json", 'a') { |file| file.write(ob) }
     else
-      File.open("#{filename}.json", 'w') { |file| file.write( ob)}
+      File.write("#{filename}.json", ob)
     end
   end
 end
