@@ -9,9 +9,9 @@ class App
   attr_accessor :persons, :books, :rentals
 
   def initialize()
-    @persons = [JSON.parse(File.read('persons.json'))]
-    @books = [JSON.parse(File.read('books.json'))]
-    @rentals = [JSON.parse(File.read('rentals.json'))]
+    @persons = File.exist?('persons.json') ? JSON.parse(File.read('persons.json')) : []
+    @books = File.exist?('books.json') ? JSON.parse(File.read('books.json')) : []
+    @rentals = File.exist?('rentals.json') ? JSON.parse(File.read('rentals.json')) : []
   end
 
   def list_books
@@ -20,7 +20,7 @@ class App
       puts "\t\t+    No Book found, please Add a book  +"
       puts "\t\t++++++++++++++++++++++++++++++++++++++++\n"
     end
-    @books.each do |book|
+    @books.map do |book|
       puts "Title: \"#{book['title']}, Author: #{book['author']}"
     end
   end
@@ -31,25 +31,31 @@ class App
       puts "\t\t+    No Person found, please Add a book  +"
       puts "\t\t++++++++++++++++++++++++++++++++++++++++\n"
     end
-    @persons.each do |person|
+    @persons.map do |person|
       puts "[#{person.class}] Name: #{person['name']}, ID: #{person['id']}, Age: #{person['age']}"
     end
   end
 
   def create_student()
+    obj_person = {}
     puts '+++++++++ Add Student +++++++++'
     print('Age: ')
     age = gets.chomp
     print('Name: ')
     name = gets.chomp
-    # print('Has parent permission? [Y/N]: ')
-    # parent_permission = gets.chomp
-    person = Student.new(name, age)
-    @persons.push(person)
+
+    obj_person[:id] = Random.rand(1...10_000)
+    obj_person[:name] = name
+    obj_person[:age] = age
+    @persons.push(obj_person)
+    ob_person = JSON.generate(@persons)
+    make_file('persons', ob_person)
     puts "Student created successfully\n"
   end
 
   def create_teacher()
+    obj_person = {}
+
     puts '+++++++++ Add Teacher +++++++++'
     print('Age: ')
     age = gets.chomp
@@ -57,22 +63,34 @@ class App
     name = gets.chomp
     print('Specialization: ')
     specialization = gets.chomp
-    teacher = Teacher.new(name, age, specialization)
-    @persons.push(teacher)
+    obj_person['id'] = Random.rand(1...10_000)
+    obj_person['name'] = name
+    obj_person['age'] = age
+    obj_person['specialization'] = specialization
+    @persons.push(obj_person)
+    ob_person = JSON.generate(@persons)
+    make_file('persons', ob_person)
     puts "Teacher created successfully\n"
   end
 
   def add_book
+    obj_book = {}
     puts '+++++++++ Add Book +++++++++'
     print('Title: ')
     title = gets.chomp
     print('Author: ')
     author = gets.chomp
-    book = Book.new(title, author)
-    @books.push(book)
+
+    obj_book['title'] = title
+    obj_book['author'] = author
+    @books.push(obj_book)
+    ob_book = JSON.generate(@books)
+    make_file('books', ob_book)
+
     puts "Book created successfully\n"
   end
 
+  # rubocop:disable Metrics/MethodLength
   def create_rental
     puts 'Select a book from the following list by number '
     puts "\t\t+    No Book found, please Add a book  +" if @books.size.zero?
@@ -90,11 +108,17 @@ class App
 
     puts 'Date [YYYY-MM-DD] :'
     date = gets.chomp
-    rental = Rental.new(date, @books[book_index], @persons[person_index])
-    @rentals.push(rental)
-
+    @rentals.push(
+      { 'date' => date,
+        'person_id' => @persons[person_index]['id'],
+        'person_name' => @persons[person_index]['name'],
+        'person_age' => @persons[person_index]['age'],
+        'book_title' => @books[book_index]['title'],
+        'book_author' => @books[book_index]['author'] }
+    )
     puts "Rental created successfully\n"
   end
+  # rubocop:enable Metrics/MethodLength
 
   def list_rental
     print 'ID of person: '
@@ -139,10 +163,6 @@ class App
   end
 
   def make_file(filename, obj)
-    if File.exist?("#{filename}.json")
-      File.open("#{filename}.json", 'a') { |file| file.write(obj) }
-    else
-      File.write("#{filename}.json", obj)
-    end
+    File.write("#{filename}.json", obj)
   end
 end
