@@ -12,7 +12,6 @@ class App
     @persons = [JSON.parse(File.read('persons.json'))]
     @books = [JSON.parse(File.read('books.json'))]
     @rentals = [JSON.parse(File.read('rentals.json'))]
-    binding.pry
   end
 
   def list_books
@@ -139,11 +138,11 @@ class App
     puts '7 - Exit'
   end
 
-  def make_file(filename, ob)
+  def make_file(filename, obj)
     if File.exist?("#{filename}.json")
-      File.open("#{filename}.json", 'a') { |file| file.write(ob) }
+      File.open("#{filename}.json", 'a') { |file| file.write(obj) }
     else
-      File.write("#{filename}.json", ob)
+      File.write("#{filename}.json", obj)
     end
   end
 end
