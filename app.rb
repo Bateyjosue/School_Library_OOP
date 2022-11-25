@@ -1,12 +1,7 @@
-require_relative './separate_classes/book'
-require_relative './separate_classes/rental'
-require_relative './separate_classes/student'
-require_relative './separate_classes/teacher'
-require_relative './data_class/store_data'
-require_relative './separate_classes/person'
-require_relative './separate_classes/nameable'
-require_relative './separate_classes/classroom'
-require 'json'
+require_relative './student'
+require_relative './teacher'
+require_relative './book'
+require_relative './rental'
 
 class App
   attr_reader :books, :people, :rentals, :id
