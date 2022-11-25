@@ -1,137 +1,67 @@
-require_relative './student'
-require_relative './teacher'
-require_relative './book'
-require_relative './rental'
+require_relative './separate_classes/book'
+require_relative './separate_classes/rental'
+require_relative './separate_classes/student'
+require_relative './separate_classes/teacher'
+require_relative './data_class/store_data'
+require_relative './separate_classes/person'
+require_relative './separate_classes/nameable'
+require_relative './separate_classes/classroom'
+require 'json'
 
 class App
-  attr_accessor :persons, :books, :rentals
+  attr_reader :books, :people, :rentals, :id
 
-  def initialize()
-    @persons = []
-    @books = []
-    @rentals = []
-  end
-
-  def list_books
-    if @books.size.zero?
-      puts "\t\t++++++++++++++++++++++++++++++++++++++++"
-      puts "\t\t+    No Book found, please Add a book  +"
-      puts "\t\t++++++++++++++++++++++++++++++++++++++++\n"
-    end
-    @books.each do |book|
-      puts "Title: \"#{book.title}\", Author: #{book.author}"
-    end
-  end
-
-  def list_person
-    if @persons.size.zero?
-      puts "\t\t++++++++++++++++++++++++++++++++++++++++"
-      puts "\t\t+    No Person found, please Add a book  +"
-      puts "\t\t++++++++++++++++++++++++++++++++++++++++\n"
-    end
-    @persons.each do |person|
-      puts "[#{person.class}] Name: #{person.name}, ID: #{person.id}, Age: #{person.age}"
-    end
-  end
-
-  def create_student()
-    puts '+++++++++ Add Student +++++++++'
-    print('Age: ')
-    age = gets.chomp
-    print('Name: ')
-    name = gets.chomp
-    print('Has parent permission? [Y/N]: ')
-    parent_permission = gets.chomp
-    person = Student.new(name, age, parent_permission.upcase)
-    @persons.push(person)
-    puts "Student created successfully\n"
-  end
-
-  def create_teacher()
-    puts '+++++++++ Add Teacher +++++++++'
-    print('Age: ')
-    age = gets.chomp
-    print('Name: ')
-    name = gets.chomp
-    print('Specialization: ')
-    specialization = gets.chomp
-    teacher = Teacher.new(name, age, specialization)
-    @persons.push(teacher)
-    puts "Teacher created successfully\n"
-  end
-
-  def add_book
-    puts '+++++++++ Add Book +++++++++'
-    print('Title: ')
-    title = gets.chomp
-    print('Author: ')
-    author = gets.chomp
-    book = Book.new(title, author)
-    @books.push(book)
-    puts "Book created successfully\n"
-  end
-
-  def create_rental
-    puts 'Select a book from the following list by number '
-    puts "\t\t+    No Book found, please Add a book  +" if @books.size.zero?
-    @books.each_with_index do |book, index|
-      puts "#{index}) Title: \"#{book.title}\", Author: #{book.author}"
-    end
-    book_index = gets.chomp.to_i
-
-    puts 'Select a person from the following list by number (not id)'
-    puts "\t\t+    No Person found, please Add a book  +" if @persons.size.zero?
-    @persons.each_with_index do |person, index|
-      puts "#{index}) [#{person.class}] Name: #{person.name}, ID: #{person.id}, Age: #{person.age}"
-    end
-    person_index = gets.chomp.to_i
-
-    puts 'Date [YYYY-MM-DD] :'
-    date = gets.chomp
-    rental = Rental.new(date, @books[book_index], @persons[person_index])
-    @rentals.push(rental)
-
-    puts "Rental created successfully\n"
-  end
-
-  def list_rental
-    print 'ID of person: '
-    @persons.each_with_index do |person, index|
-      puts "#{index}) [#{person.class}] Name: #{person.name}, ID: #{person.id}, Age: #{person.age}"
-    end
-    id = gets.chomp.to_i
-    person = @persons.find { |p| p.id == id }
-    puts 'Rentals: '
-    person.rentals.each { |rental| puts "Date: #{rental.date}, Book: #{rental.book.title} by #{rental.book.author}" }
-  end
-
-  def create_person()
-    loop do
-      print 'Do you want to create a student (1) or a teacher (2)? [Input the number] :'
-      choose = gets.chomp
-      case choose.to_i
-      when 1
-        create_student
-        break
-      when 2
-        create_teacher
-        break
+  def initialize
+    @book_file = StoreData.new('books')
+    @people_file = StoreData.new('persons')
+    @rentals_file = StoreData.new('rentals')
+    @books = @book_file.read.map { |arr| Book.new(arr['title'], arr['author']) }
+    @people = @people_file.read.map do |arr|
+      if arr['class'].include?('Student')
+        Student.new(arr['age'], arr['name'], arr['parent_permission'], arr['classroom'])
+      else
+        Teacher.new(arr['age'], arr['name'], arr['specialization'])
       end
-      break unless choose.to_i == 1 || choose.to_i == 2
+    end
+    @rentals = @rentals_file.read.map do |arr|
+      book = @books.select { |bk| bk.title == arr['book_title'] }[0]
+      person = @people.select { |pers| pers.id == arr['person_id'] }[0]
+      Rental.new(book, person, arr['date'])
     end
   end
 
-  def message
-    p '======  Welcome to Our School Library Apps  ======'
-    p '=================================================='
-    puts 'Please choose an option by entering a number:'
-    puts '1 - List all books'
-    puts '2 - List all people'
-    puts '3 - Create a person'
-    puts '4 - Create a book'
-    puts '5 - Create a rental'
-    puts '6 - List all rentals for a given person id'
-    puts '7 - Exit'
+  def create_a_student(age, name, permission)
+    new_person = Student.new(age, name, permission)
+    @people.push(new_person)
   end
 
+  def create_a_teacher(age, name, specialization)
+    new_person = Teacher.new(age, name, specialization)
+    @people.push(new_person)
+  end
+
+  def create_a_book(title, author)
+    new_book = Book.new(title, author)
+    @books.push(new_book)
+  end
+
+  def create_a_rental(book, person)
+    rental = Rental.new(book, person)
+    @rentals.push(rental)
+  end
+
+  def list_rentals_for_given_id(id)
+    selected_person = @people.select { |person| person.id == id }
+    @rentals.each do |rental|
+      if rental.person == selected_person[0]
+        puts "Date: #{rental.date}, Book '#{rental.book.title}' written by #{rental.book.author}"
+      end
+    end
+  end
+
+  def exit
+    @book_file.write(@books.map(&:create_object))
+    @people_file.write(@people.map(&:create_object))
+    @rentals_file.write(@rentals.map(&:create_object))
+  end
 end
