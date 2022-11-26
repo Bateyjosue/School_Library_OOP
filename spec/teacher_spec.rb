@@ -2,17 +2,17 @@ require_relative '../separate_classes/teacher'
 
 describe Teacher do
   context 'Unit Test for Teacher Class' do
-    age = 35
-    name = 'Maloba'
-    specialization = 'Business'
+    age = 45
+    name = 'Juif'
+    specialization = 'Math'
     teacher = Teacher.new(age, name, specialization)
 
     it 'If the teacher age is correct' do
-      expect(teacher.age).to eq(35)
+      expect(teacher.age).to eq(45)
     end
 
     it 'If the teacher name is correct' do
-      expect(teacher.name).to eq('Maloba')
+      expect(teacher.name).to eq('Juif')
     end
 
     it 'If it creates a new instance of teacher' do
