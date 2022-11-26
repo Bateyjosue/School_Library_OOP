@@ -3,14 +3,14 @@ require_relative '../separate_classes/classroom'
 
 describe Student do
   context 'Unit test for Student Class' do
-    age = 21
+    age = 19
     name = 'David'
-    classroom = 'Computer'
+    classroom = 'Science'
     parent_permission = true
     new_student = Student.new(age, name, parent_permission, classroom)
 
     it 'If the student age is correct' do
-      expect(new_student.age).to eq(21)
+      expect(new_student.age).to eq(19)
     end
 
     it 'If the student name is correct' do
@@ -18,7 +18,7 @@ describe Student do
     end
 
     it 'If the student classroom is correct' do
-      expect(new_student.classroom).to eq('Computer')
+      expect(new_student.classroom).to eq('Science')
     end
 
     it 'If it creates a new instance of student' do
